@@ -79,7 +79,7 @@ struct AllNotificationsView: View {
                 }
             }
             
-            ToolbarItem(placement: .bottomBar) {
+            ToolbarItem(placement: .destructiveAction) {
                 Button("Delete \(selectedNotifications.count) notifications", systemImage: "trash", role: .destructive) {
                     deleteSelectedNotifications()
                 }
