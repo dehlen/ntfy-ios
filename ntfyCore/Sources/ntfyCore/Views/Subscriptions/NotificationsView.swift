@@ -13,7 +13,11 @@ struct NotificationsView: View {
     @Environment(\.dependencies) private var dependencies: DependencyContainer
     @Environment(\.modelContext) private var context
     
-    @Query(sort: \TopicSubscription.topic, order: .forward) private var subscriptions: [TopicSubscription]
+    @Query(
+        sort: \TopicSubscription.topic,
+        order: .forward,
+        animation: .default
+    ) private var subscriptions: [TopicSubscription]
     
     var body: some View {
         @Bindable var appRouter = dependencies.appRouter

@@ -25,7 +25,11 @@ struct TopicDetailsView: View {
     @State private var selectedNotifications: Set<Notification.ID> = []
     @State var editMode: EditMode = .inactive
     
-    @Query(sort: \Notification.timestamp, order: .reverse) var notifications: [Notification]
+    @Query(
+        sort: \Notification.timestamp,
+        order: .reverse,
+        animation: .default
+    ) var notifications: [Notification]
 
     let subscription: TopicSubscription
     
@@ -35,7 +39,8 @@ struct TopicDetailsView: View {
         let topicID = subscription.id
         _notifications = Query(
             filter: #Predicate { $0.topic.id == topicID },
-            sort: [SortDescriptor(\Notification.timestamp, order: .reverse)]
+            sort: [SortDescriptor(\Notification.timestamp, order: .reverse)],
+            animation: .default
         )
     }
     

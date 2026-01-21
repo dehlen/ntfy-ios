@@ -13,7 +13,11 @@ struct AllNotificationsView: View {
     @Environment(\.dependencies) private var dependencies: DependencyContainer
     @Environment(\.modelContext) private var context
 
-    @Query(sort: \Notification.timestamp, order: .reverse) var notifications: [Notification]
+    @Query(
+        sort: \Notification.timestamp,
+        order: .reverse,
+        animation: .default
+    ) var notifications: [Notification]
 
     @State private var selectedNotifications: Set<Notification.ID> = []
     @State var editMode: EditMode = .inactive
