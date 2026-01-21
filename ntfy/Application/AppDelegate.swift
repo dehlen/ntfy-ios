@@ -14,13 +14,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     private var dependencies: DependencyContainer {
         DependencyContainer.live
     }
-
-    func applicationDidFinishLaunching(_ application: UIApplication) {
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         dependencies.messagingService.configure()
 
         Task {
             await dependencies.messagingService.enableRemoteNotifications(for: application)
         }
+        
+        return true
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
