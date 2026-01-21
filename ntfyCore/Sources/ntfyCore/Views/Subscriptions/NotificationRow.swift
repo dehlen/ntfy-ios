@@ -27,11 +27,13 @@ struct NotificationRow: View {
                     .foregroundStyle(.secondary)
             }
 
-            Text(title)
-                .font(.headline)
-                .foregroundStyle(.primary)
+            if let title = notification.title {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+            }
 
-            Text(notification.message)
+            Text(message)
                 .font(.subheadline)
                 .foregroundStyle(.primary)
 
@@ -56,7 +58,7 @@ struct NotificationRow: View {
                 Label("Actions", systemImage: "ellipsis.circle")
             }
             .buttonStyle(.borderless)
-            .controlSize(.regular)
+            .font(.body)
         } else {
             HStack {
                 if let first = actions.first {
@@ -75,14 +77,13 @@ struct NotificationRow: View {
         }
     }
     
-    var title: String {
-        let title = notification.title ?? "\(notification.topic.serviceURLHost)/\(notification.topic.topic)"
+    var message: String {
         let emojis = notification.tagSet.compactMap({ EmojiCoder.shared.emoji(by: $0)?.unicode }).joined(separator: "")
 
         if !emojis.isEmpty {
-            return "\(emojis) \(title)"
+            return "\(emojis) \(notification.message)"
         } else {
-            return title
+            return notification.message
         }
     }
 

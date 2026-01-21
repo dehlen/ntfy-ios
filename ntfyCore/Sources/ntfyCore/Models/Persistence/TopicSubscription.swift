@@ -39,7 +39,11 @@ public class TopicSubscription: Identifiable {
     
     @Transient
     public var subscriptionTopic: String {
-        "\(serviceURL)/\(topic)".deletingPrefix(Bundle.main.appBaseUrl)
+        if serviceURL == Bundle.main.appBaseUrl {
+            topic
+        } else {
+            "\(serviceURL)/\(topic)"
+        }
     }
     
     @Transient

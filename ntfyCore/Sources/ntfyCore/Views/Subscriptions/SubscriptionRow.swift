@@ -15,7 +15,7 @@ struct SubscriptionRow: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("\(subscription.serviceURLHost)/\(subscription.topic)")
+            Text(title)
                 .font(.headline)
                 .foregroundStyle(.primary)
             if let lastNotificationDate = lastNotificationDate(for: subscription)?.formattedRelativeDateTime() {
@@ -23,6 +23,14 @@ struct SubscriptionRow: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
+        }
+    }
+    
+    private var title: String {
+        if subscription.serviceURL == Bundle.main.appBaseUrl {
+            return subscription.topic
+        } else {
+            return "\(subscription.serviceURLHost)/\(subscription.topic)"
         }
     }
     
