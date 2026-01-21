@@ -10,12 +10,90 @@ import SwiftUI
 
 struct NotificationRow: View {
     let notification: ntfyCore.Notification
-    
+    @Environment(\.openURL) private var openURL
+    @ScaledMetric(relativeTo: .body) private var iconSize: CGFloat = 16.0
+
     var body: some View {
-        DetailRow(
-            headline: notification.title ?? "\(notification.topic.serviceURLHost)/\(notification.topic.topic)",
-            subheadline: notification.message
-        )
+        VStack(alignment: .leading) {
+            HStack {
+                if notification.priority != .default {
+                    Image("priority-\(notification.priority.rawValue)", bundle: .module)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: iconSize, height: iconSize)
+                }
+                Text(notification.date.formattedRelativeDateTime())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.primary)
+
+            Text(notification.message)
+                .font(.subheadline)
+                .foregroundStyle(.primary)
+
+            if !notification.viewActions.isEmpty {
+                actionButtons
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var actionButtons: some View {
+        let actions = notification.viewActions
+
+        if actions.count > 2 {
+            Menu {
+                ForEach(actions) { action in
+                    Button(action.label) {
+                        handleAction(action)
+                    }
+                }
+            } label: {
+                Label("Actions", systemImage: "ellipsis.circle")
+            }
+            .buttonStyle(.borderless)
+            .controlSize(.regular)
+        } else {
+            HStack {
+                if let first = actions.first {
+                    Button(first.label) {
+                        handleAction(first)
+                    }
+                }
+
+                if actions.count == 2 {
+                    Spacer()
+                    Button(actions[1].label) {
+                        handleAction(actions[1])
+                    }
+                }
+            }
+        }
+    }
+    
+    var title: String {
+        let title = notification.title ?? "\(notification.topic.serviceURLHost)/\(notification.topic.topic)"
+        let emojis = notification.tagSet.compactMap({ EmojiCoder.shared.emoji(by: $0)?.unicode }).joined(separator: "")
+
+        if !emojis.isEmpty {
+            return "\(emojis) \(title)"
+        } else {
+            return title
+        }
+    }
+
+    private func handleAction(_ action: Action) {
+        guard
+            let urlString = action.url,
+            let url = URL(string: urlString) else {
+            return
+        }
+
+        openURL(url)
     }
 }
 
@@ -30,14 +108,34 @@ struct NotificationRow: View {
             topic: "preview",
             serviceURL: "https://ntfy.sh"
         )
+
+        let actions = """
+        [
+            {
+                "id": "1",
+                "action": "view",
+                "label": "Open Docs",
+                "url": "https://docs.ntfy.sh",
+                "clear": true
+            },
+            {
+                "id": "2",
+                "action": "view",
+                "label": "Open Website",
+                "url": "https://ntfy.sh",
+                "clear": true
+            }
+        ]    
+        """
+        
         let preview = Notification(
             title: "Notification Title",
             message: "Notification Message",
             timestamp: Date.now.timeIntervalSince1970,
-            priority: .default,
+            priority: .low,
             click: nil,
-            tags: nil,
-            actions: nil,
+            tags: "tada",
+            actions: actions,
             messageID: UUID().uuidString,
             topic: previewTopic
         )

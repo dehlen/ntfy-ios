@@ -10,9 +10,13 @@ import SwiftUI
 
 struct EditUserForm: View {
     let user: User
-    
+
     @Environment(\.dismiss) private var dismiss
-    @Environment(LiveUserStore.self) private var userStore
+    @Environment(\.dependencies) private var dependencies: DependencyContainer
+
+    private var userStore: any UserStore {
+        dependencies.userStore
+    }
     
     @State private var username: String = ""
     @State private var password: String = ""

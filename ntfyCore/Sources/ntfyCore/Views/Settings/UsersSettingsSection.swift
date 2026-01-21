@@ -9,8 +9,15 @@ import OSLog
 import SwiftUI
 
 struct UsersSettingsSection: View {
-    @Environment(AppRouter.self) private var appRouter
-    @Environment(LiveUserStore.self) private var userStore
+    @Environment(\.dependencies) private var dependencies: DependencyContainer
+
+    private var appRouter: AppRouter {
+        dependencies.appRouter
+    }
+
+    private var userStore: any UserStore {
+        dependencies.userStore
+    }
     
     var body: some View {
         Section {

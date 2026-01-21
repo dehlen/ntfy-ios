@@ -13,6 +13,7 @@ public protocol Store {
     var context: ModelContext { get }
     
     func topics() throws -> [TopicSubscription]
+    func topic(serviceURL: String, name: String) throws -> TopicSubscription?
     func pollNotifications(for topic: TopicSubscription) async throws -> [Message]
 }
 
@@ -50,6 +51,13 @@ public final class LiveStore: Store {
     public func topics() throws -> [TopicSubscription] {
         let fetchDesciptor = FetchDescriptor<TopicSubscription>()
         return try context.fetch(fetchDesciptor)
+    }
+    
+    public func topic(serviceURL: String, name: String) throws -> TopicSubscription? {
+        let fetchDesciptor = FetchDescriptor<TopicSubscription>(predicate: #Predicate {
+            $0.topic == name && $0.serviceURL == serviceURL
+        })
+        return try context.fetch(fetchDesciptor).first
     }
     
     public func pollNotifications(for topic: TopicSubscription) async throws -> [Message] {

@@ -11,23 +11,27 @@ import SwiftUI
 
 @MainActor
 class AppDelegate: NSObject, UIApplicationDelegate {
+    private var dependencies: DependencyContainer {
+        DependencyContainer.live
+    }
+
     func applicationDidFinishLaunching(_ application: UIApplication) {
-        CompositionRoot.messagingService.configure()
-        
+        dependencies.messagingService.configure()
+
         Task {
-            await CompositionRoot.messagingService.enableRemoteNotifications(for: application)
+            await dependencies.messagingService.enableRemoteNotifications(for: application)
         }
     }
-    
+
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        CompositionRoot.messagingService.updateDeviceToken(deviceToken)
+        dependencies.messagingService.updateDeviceToken(deviceToken)
     }
-    
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: any Error) {
         NtfyLogger.messaging.error("Failed to register for remote notifications: \(error.localizedDescription, privacy: .public)")
     }
-    
+
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
-        return await CompositionRoot.messagingService.handleRemoteNotification(userInfo: userInfo)
+        return await dependencies.messagingService.handleRemoteNotification(userInfo: userInfo)
     }
 }

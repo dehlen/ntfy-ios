@@ -30,7 +30,7 @@ public final class EmojiCoder {
     
     private func load() {
         do {
-            let url = Bundle.main.url(forResource: "emojis", withExtension: "json")!
+            let url = Bundle.module.url(forResource: "emojis", withExtension: "json")!
             let data = try Data(contentsOf: url)
             let result = try decoder.decode([Emoji].self, from: data)
             cache = Dictionary(

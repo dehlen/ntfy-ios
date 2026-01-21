@@ -57,13 +57,6 @@
 			);
 			target = 09C1D5F52F1F84940052DA69 /* ntfy-NSE */;
 		};
-		09C1D6052F1F850A0052DA69 /* Exceptions for "ntfy" folder in "ntfy-NSE" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Application/CompositionRoot.swift,
-			);
-			target = 09C1D5F52F1F84940052DA69 /* ntfy-NSE */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -71,7 +64,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				097340DC2F1A521C00D43208 /* Exceptions for "ntfy" folder in "ntfy" target */,
-				09C1D6052F1F850A0052DA69 /* Exceptions for "ntfy" folder in "ntfy-NSE" target */,
 			);
 			path = ntfy;
 			sourceTree = "<group>";

@@ -12,8 +12,11 @@ import SwiftUI
 struct TopicDetailsView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    
-    @Environment(LiveTestNotificationPublisher.self) private var testNotificationPublisher
+    @Environment(\.dependencies) private var dependencies: DependencyContainer
+
+    private var testNotificationPublisher: any TestNotificationPublisher {
+        dependencies.testNotificationPublisher
+    }
 
     @State private var selectedNotifications: Set<Notification.ID> = []
     @State var editMode: EditMode = .inactive

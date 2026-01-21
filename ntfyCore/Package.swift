@@ -25,6 +25,9 @@ let package = Package(
                 .product(name: "FirebaseCore", package: "firebase-ios-sdk"),
                 .product(name: "FirebaseMessaging", package: "firebase-ios-sdk")
             ],
+            resources: [
+                .process("Resources/emojis.json"),
+            ],
             swiftSettings: [
                 .defaultIsolation(MainActor.self),
                 .strictMemorySafety(),

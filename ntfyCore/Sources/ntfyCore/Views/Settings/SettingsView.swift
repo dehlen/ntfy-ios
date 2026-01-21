@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(AppRouter.self) private var appRouter
+    @Environment(\.dependencies) private var dependencies: DependencyContainer
+
+    private var appRouter: AppRouter {
+        dependencies.appRouter
+    }
     
     var body: some View {
         @Bindable var appRouter = appRouter

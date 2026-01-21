@@ -8,13 +8,13 @@
 public import SwiftUI
 
 public struct AppTabBar: View {
-    @Environment(AppRouter.self) private var appRouter
-    
+    @Environment(\.dependencies) private var dependencies: DependencyContainer
+
     public init() {
     }
 
     public var body: some View {
-        @Bindable var appRouter = appRouter
+        @Bindable var appRouter = dependencies.appRouter
 
         TabView(selection: $appRouter.selectedTab) {
             ForEach(AppTab.allCases) { tab in

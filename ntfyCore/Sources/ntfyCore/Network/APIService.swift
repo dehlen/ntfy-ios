@@ -9,15 +9,10 @@ public import Foundation
 import OSLog
 
 public protocol APIService {
+    func authenticate(topic: TopicSubscription) async throws -> Bool
     func poll(topic: TopicSubscription, since messageID: String?) async throws -> [Message]
     func poll(topic: TopicSubscription, messageID: String) async throws -> Message
-    func publish(
-        title: String,
-        message: String,
-        priority: Priority,
-        tags: [String],
-        to topic: TopicSubscription
-    ) async throws
+    func publish(title: String, message: String, priority: Priority, tags: [String], to topic: TopicSubscription) async throws
 }
 
 public final class LiveAPIService: APIService {
@@ -45,6 +40,19 @@ public final class LiveAPIService: APIService {
     public init(session: URLSession, userStore: any UserStore) {
         self.network = Network(session: session)
         self.userStore = userStore
+    }
+    
+    public func authenticate(topic: TopicSubscription) async throws -> Bool {
+        guard let baseURL = URL(string: topic.serviceURL) else {
+            throw NetworkError.invalidURL
+        }
+        
+        let request = URLRequestBuilder(baseURL: baseURL)
+            .get("/\(topic.topic)/auth")
+            .basicAuth(credentials: credentials(for: topic))
+        
+        let response: AuthenticationResponse = try await network.send(request)
+        return response.success == true
     }
     
     public func poll(topic: TopicSubscription, since messageID: String?) async throws -> [Message] {

@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct GeneralSettingsSection: View {
-    @Environment(AppRouter.self) private var appRouter
+    @Environment(\.dependencies) private var dependencies: DependencyContainer
+
+    private var appRouter: AppRouter {
+        dependencies.appRouter
+    }
 
     @AppStorage("default_server") private var defaultServer: String = "https://ntfy.sh"
 

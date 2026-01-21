@@ -9,8 +9,12 @@ import SwiftData
 import SwiftUI
 
 struct NotificationsView: View {
-    @Environment(AppRouter.self) private var appRouter
+    @Environment(\.dependencies) private var dependencies: DependencyContainer
     @Environment(\.modelContext) private var context
+
+    private var appRouter: AppRouter {
+        dependencies.appRouter
+    }
     
     @Query(sort: \TopicSubscription.topic, order: .forward) private var subscriptions: [TopicSubscription]
     
@@ -21,10 +25,16 @@ struct NotificationsView: View {
             List {
                 Section {
                     NavigationLink(value: AppRoute.allNotifications) {
-                        DetailRow(
-                            headline: "All notifications",
-                            subheadline: lastNotificationDate()?.formattedRelativeDateTime()
-                        )
+                        VStack(alignment: .leading) {
+                            Text("All notifications")
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                            if let lastNotificationDate = lastNotificationDate()?.formattedRelativeDateTime() {
+                                Text(lastNotificationDate)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                         .badge(allNotificationsCount)
                     }
                 }

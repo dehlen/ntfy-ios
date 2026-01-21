@@ -14,10 +14,16 @@ struct SubscriptionRow: View {
     let subscription: TopicSubscription
 
     var body: some View {
-        DetailRow(
-            headline: "\(subscription.serviceURLHost)/\(subscription.topic)",
-            subheadline: lastNotificationDate(for: subscription)?.formattedRelativeDateTime()
-        )
+        VStack(alignment: .leading) {
+            Text("\(subscription.serviceURLHost)/\(subscription.topic)",)
+                .font(.headline)
+                .foregroundStyle(.primary)
+            if let lastNotificationDate = lastNotificationDate(for: subscription)?.formattedRelativeDateTime() {
+                Text(lastNotificationDate)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
     }
     
     private func lastNotificationDate(for topic: TopicSubscription) -> Date? {

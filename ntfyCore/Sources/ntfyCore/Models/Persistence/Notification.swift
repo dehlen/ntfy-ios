@@ -56,4 +56,18 @@ public class Notification: Identifiable {
             .split(separator: ",")
             .map(String.init) ?? [])
     }
+    
+    @Transient
+    @MainActor
+    public var availableActions: [Action] {
+        ActionCoder.parse(actions) ?? []
+    }
+    
+    @Transient
+    @MainActor
+    public var viewActions: [Action] {
+        availableActions.filter {
+            $0.action == "view" && $0.url != nil
+        }
+    }
 }

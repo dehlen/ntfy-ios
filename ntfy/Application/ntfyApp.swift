@@ -12,14 +12,13 @@ import SwiftUI
 @main
 struct ntfyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var delegate
-    
+    @State private var dependencyContainer: DependencyContainer = .live
+
     var body: some Scene {
         WindowGroup {
             AppTabBar()
-                .environment(CompositionRoot.appRouter)
-                .environment(CompositionRoot.userStore)
-                .environment(CompositionRoot.testNotificationPublisher)
+                .environment(\.dependencies, dependencyContainer)
         }
-        .modelContainer(CompositionRoot.store.container)
+        .modelContainer(dependencyContainer.modelContainer)
     }
 }
