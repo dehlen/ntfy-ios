@@ -47,7 +47,7 @@ public final class Network {
         }
     }
     
-    private func send<T>(
+    public func send<T>(
         _ request: URLRequest,
         parse: (Data) throws -> T
     ) async throws -> T {

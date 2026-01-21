@@ -68,7 +68,16 @@ public final class LiveAPIService: APIService {
             ])
             .basicAuth(credentials: credentials(for: topic))
 
-        return try await network.send(request)
+        let decoder = JSONDecoder()
+        return try await network.send(request, parse: { data in
+            try String(decoding: data, as: UTF8.self)
+                .split(whereSeparator: \.isNewline)
+                .map {
+                    let data = Data($0.utf8)
+                    let message: Message = try decoder.decode(Message.self, from: data)
+                    return message
+                }
+        })
     }
     
     public func poll(topic: TopicSubscription, messageID: String) async throws -> Message {
