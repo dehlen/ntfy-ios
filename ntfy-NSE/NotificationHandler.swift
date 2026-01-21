@@ -40,8 +40,8 @@ import UserNotifications
             messageID: message.id,
             topic: topic
         )
-
-        dependencies.store.context.insert(notification)
+        
+        dependencies.store.save(notification, to: topic)
         contentHandler(modifiedContent)
     }
     

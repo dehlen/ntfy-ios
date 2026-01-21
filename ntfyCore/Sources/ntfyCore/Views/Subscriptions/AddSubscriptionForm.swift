@@ -86,6 +86,7 @@ struct AddSubscriptionForm: View {
             serviceURL: isUseAnotherServerEnabled ? serviceURL : defaultServer
         )
         context.insert(subscription)
+        try? context.save()
         dismiss()
     }
 }

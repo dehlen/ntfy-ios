@@ -15,14 +15,21 @@ public class TopicSubscription: Identifiable {
     public var id: String = UUID().uuidString
     public var topic: String
     public var serviceURL: String
-    
+    public var lastNotificationId: String?
+
     @Relationship(deleteRule: .cascade, inverse: \Notification.topic)
     public var notifications: [Notification]?
         
-    public init(id: String = UUID().uuidString, topic: String, serviceURL: String) {
+    public init(
+        id: String = UUID().uuidString,
+        topic: String,
+        serviceURL: String,
+        lastNotificationId: String? = nil
+    ) {
         self.id = id
         self.topic = topic
         self.serviceURL = serviceURL
+        self.lastNotificationId = lastNotificationId
     }
     
     @Transient
@@ -44,12 +51,5 @@ public class TopicSubscription: Identifiable {
         } else {
             "\(serviceURL)/\(topic)"
         }
-    }
-    
-    @Transient
-    public var lastNotificationId: String? {
-        notifications?.max(by: {
-            $0.timestamp < $1.timestamp
-        })?.messageID
     }
 }

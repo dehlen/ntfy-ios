@@ -15,6 +15,7 @@ public protocol Store {
     func topics() throws -> [TopicSubscription]
     func topic(serviceURL: String, name: String) throws -> TopicSubscription?
     func pollNotifications(for topic: TopicSubscription) async throws -> [Message]
+    func save(_ notification: Notification, to topic: TopicSubscription)
 }
 
 public final class LiveStore: Store {
@@ -75,19 +76,14 @@ public final class LiveStore: Store {
                 topic: topic
             )
         }
-        for notification in notifications.filter({ !isExisting(notification: $0) }) {
-            context.insert(notification)
+        for notification in notifications {
+            save(notification, to: topic)
         }
         return messages
     }
-    
-    private func isExisting(notification: Notification) -> Bool {
-        let messageID = notification.messageID
-        let fetchDescriptor = FetchDescriptor<Notification>(predicate: #Predicate { $0.messageID == messageID })
-        do {
-            return try context.fetch(fetchDescriptor).first != nil
-        } catch {
-            return false
-        }
+
+    public func save(_ notification: Notification, to topic: TopicSubscription) {
+        context.insert(notification)
+        topic.lastNotificationId = notification.messageID
     }
 }
