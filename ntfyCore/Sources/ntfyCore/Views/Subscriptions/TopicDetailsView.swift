@@ -138,6 +138,7 @@ struct TopicDetailsView: View {
                 try await testNotificationPublisher.publish(
                     to: subscription
                 )
+                await refresh()
             } catch {
                 NtfyLogger.messaging.error("Failure to send test notification: \(error.localizedDescription, privacy: .public)")
             }
