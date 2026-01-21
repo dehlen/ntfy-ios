@@ -17,6 +17,10 @@ struct TopicDetailsView: View {
     private var testNotificationPublisher: any TestNotificationPublisher {
         dependencies.testNotificationPublisher
     }
+    
+    private var store: any Store {
+        dependencies.store
+    }
 
     @State private var selectedNotifications: Set<Notification.ID> = []
     @State var editMode: EditMode = .inactive
@@ -54,6 +58,12 @@ struct TopicDetailsView: View {
             toolbar
         }
         .environment(\.editMode, $editMode)
+        .refreshable {
+            await refresh()
+        }
+        .task(id: subscription.id) {
+            await refresh()
+        }
     }
     
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
@@ -101,6 +111,14 @@ struct TopicDetailsView: View {
             systemImage: "bell.slash",
             description: Text("To send notifications to this topic, simply PUT or POST to the topic URL.\n\nExample:\n`$ curl -d \"hi\" \(subscription.serviceURL)/\(subscription.topic)`\n\nDetailed instructions are available on [ntfy.sh](https://ntfy.sh) and [in the docs](https://ntfy.sh/docs).")
         )
+    }
+    
+    private func refresh() async {
+        do {
+            _ = try await dependencies.store.pollNotifications(for: subscription)
+        } catch {
+            NtfyLogger.db.error("Failed to poll notifications for subscription: \(error.localizedDescription, privacy: .public)")
+        }
     }
     
     private func setEditMode(isEnabled: Bool) {

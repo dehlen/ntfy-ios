@@ -15,7 +15,7 @@ struct SubscriptionRow: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("\(subscription.serviceURLHost)/\(subscription.topic)",)
+            Text("\(subscription.serviceURLHost)/\(subscription.topic)")
                 .font(.headline)
                 .foregroundStyle(.primary)
             if let lastNotificationDate = lastNotificationDate(for: subscription)?.formattedRelativeDateTime() {
@@ -29,7 +29,7 @@ struct SubscriptionRow: View {
     private func lastNotificationDate(for topic: TopicSubscription) -> Date? {
         let topicID = topic.id
         var descriptor = FetchDescriptor<Notification>(
-            predicate: #Predicate { $0.topic.id > topicID },
+            predicate: #Predicate { $0.topic.id == topicID },
             sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
         )
         descriptor.fetchLimit = 1

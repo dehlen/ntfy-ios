@@ -10,12 +10,17 @@ import SwiftData
 import SwiftUI
 
 struct AllNotificationsView: View {
+    @Environment(\.dependencies) private var dependencies: DependencyContainer
     @Environment(\.modelContext) private var context
 
     @Query(sort: \Notification.timestamp, order: .reverse) var notifications: [Notification]
 
     @State private var selectedNotifications: Set<Notification.ID> = []
     @State var editMode: EditMode = .inactive
+    
+    var store: any Store {
+        dependencies.store
+    }
 
     var body: some View {
         List(notifications, selection: $selectedNotifications) { notification in
@@ -36,6 +41,12 @@ struct AllNotificationsView: View {
             toolbar
         }
         .environment(\.editMode, $editMode)
+        .refreshable {
+            await refresh()
+        }
+        .task {
+            await refresh()
+        }
     }
     
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
@@ -79,6 +90,20 @@ struct AllNotificationsView: View {
             systemImage: "bell.slash",
             description: Text("To send notifications to this topic, simply PUT or POST to the topic URL.\n\nExample:\n`$ curl -d \"hi\" ntfy.sh/<topic name>`\n\nDetailed instructions are available on [ntfy.sh](https://ntfy.sh) and [in the docs](https://ntfy.sh/docs).")
         )
+    }
+    
+    private func refresh() async {
+        await withTaskGroup(of: Void.self) { group in
+            for subscription in (try? store.topics()) ?? [] {
+                group.addTask { @Sendable @MainActor in
+                    do {
+                        _ = try await dependencies.store.pollNotifications(for: subscription)
+                    } catch {
+                        NtfyLogger.db.error("Failed to poll notifications for subscription: \(error.localizedDescription, privacy: .public)")
+                    }
+                }
+            }
+        }
     }
     
     private func clearAllNotifications() {

@@ -75,9 +75,19 @@ public final class LiveStore: Store {
                 topic: topic
             )
         }
-        for notification in notifications {
+        for notification in notifications.filter({ !isExisting(notification: $0) }) {
             context.insert(notification)
         }
         return messages
+    }
+    
+    private func isExisting(notification: Notification) -> Bool {
+        let messageID = notification.messageID
+        let fetchDescriptor = FetchDescriptor<Notification>(predicate: #Predicate { $0.messageID == messageID })
+        do {
+            return try context.fetch(fetchDescriptor).first != nil
+        } catch {
+            return false
+        }
     }
 }
