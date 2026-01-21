@@ -170,6 +170,7 @@ struct TopicDetailsView: View {
                 model: Notification.self,
                 where: #Predicate { selectedNotificationIDs.contains($0.id) }
             )
+            setEditMode(isEnabled: false)
         } catch {
             NtfyLogger.db.error("Could not delete selected notifications: \(error.localizedDescription, privacy: .public)")
         }

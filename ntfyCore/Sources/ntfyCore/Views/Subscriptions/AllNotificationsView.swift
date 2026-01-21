@@ -129,6 +129,9 @@ struct AllNotificationsView: View {
                 model: Notification.self,
                 where: #Predicate { selectedNotificationIDs.contains($0.id) }
             )
+            withAnimation {
+                self.editMode = .inactive
+            }
         } catch {
             NtfyLogger.db.error("Could not delete selected notifications: \(error.localizedDescription, privacy: .public)")
         }
