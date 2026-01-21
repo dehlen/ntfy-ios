@@ -51,8 +51,8 @@ public class Notification: Identifiable {
     }
     
     @Transient
-    public var tagSet: Set<String> {
-        Set(tags?
+    public var availableTags: [String] {
+        Array(tags?
             .split(separator: ",")
             .map(String.init) ?? [])
     }

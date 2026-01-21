@@ -78,7 +78,7 @@ struct NotificationRow: View {
     }
     
     var message: String {
-        let emojis = notification.tagSet.compactMap({ EmojiCoder.shared.emoji(by: $0)?.unicode }).joined(separator: "")
+        let emojis = notification.availableTags.compactMap({ EmojiCoder.shared.emoji(by: $0)?.unicode }).joined(separator: "")
 
         if !emojis.isEmpty {
             return "\(emojis) \(notification.message)"
