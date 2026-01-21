@@ -44,8 +44,8 @@ public class TopicSubscription: Identifiable {
     
     @Transient
     public var lastNotificationId: String? {
-        notifications?.sorted {
+        notifications?.max(by: {
             $0.timestamp < $1.timestamp
-        }.first?.messageID
+        })?.messageID
     }
 }
