@@ -56,6 +56,8 @@ public final class Network {
             NtfyLogger.network.debug("[HTTP] Request finished. ID: \(traceID, privacy: .public)")
         }
         
+        NtfyLogger.network.debug("[HTTP] Request started. ID: \(traceID, privacy: .public), URL: \(request.url?.absoluteString ?? "?", privacy: .public)")
+        
         let (data, response) = try await session.data(for: request)
         guard let response = response as? HTTPURLResponse else {
             NtfyLogger.network.debug("[HTTP] Request had no http response. ID: \(traceID, privacy: .public)")
