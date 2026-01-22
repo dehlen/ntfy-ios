@@ -24,13 +24,13 @@ import SwiftData
             let userInfo = bestAttemptContent.userInfo
             
             guard let message = Message(from: userInfo) else {
-                NtfyLogger.messaging.error("Message canot be parsed from userInfo: \(userInfo, privacy: .public)")
+                NtfyLogger.nse.error("Message canot be parsed from userInfo: \(userInfo, privacy: .public)")
                 contentHandler(bestAttemptContent)
                 return
             }
             
             guard let event = MessageEvent(rawValue: message.event) else {
-                NtfyLogger.messaging.error("Received unknown message event: \(message.event, privacy: .public)")
+                NtfyLogger.nse.error("Received unknown message event: \(message.event, privacy: .public)")
                 contentHandler(bestAttemptContent)
                 return
             }
@@ -47,6 +47,7 @@ import SwiftData
     }
     
     override func serviceExtensionTimeWillExpire() {
+        NtfyLogger.nse.info("Service extension time will expire")
         // Called just before the extension will be terminated by the system.
         // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
         if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {

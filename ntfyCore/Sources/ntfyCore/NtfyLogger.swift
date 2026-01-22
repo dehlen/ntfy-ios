@@ -15,6 +15,7 @@ public struct NtfyLogger {
     public static let userStore: Logger = .init(category: "userStore")
     public static let network: Logger = .init(category: "network")
     public static let emojis: Logger = .init(category: "emojis")
+    public static let nse: Logger = .init(category: "nse")
 }
 
 extension Logger {
