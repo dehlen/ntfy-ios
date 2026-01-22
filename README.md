@@ -19,11 +19,10 @@ An iOS client for the [ntfy.sh](https://ntfy.sh) service.
 
 - Add support for "http" actions
 - Test Firebase remote notifications
-- Move Xcode project configuration into `.xcconfig` files to make it easier to switch f.e the bundle identifier
 - Make sure whether we want to target a lower iOS SDK (currently iOS 26 for ease of implementation)
 - Add fastlane configuration to make deploying the application to the App Store straightforward
 - Unit Tests
-- Add local `.apns` payloads and write documentation on how to test notification handling locally
+- Add local `.aps` payloads and write documentation on how to test notification handling locally
 
 ## Demo
 
