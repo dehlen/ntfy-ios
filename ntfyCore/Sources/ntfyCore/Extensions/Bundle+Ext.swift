@@ -8,10 +8,6 @@
 public import Foundation
 
 public extension Bundle {
-    nonisolated var appBaseUrl: String {
-        string(for: "AppBaseURL")
-    }
-    
     var build: String {
         string(for: "CFBundleVersion")
     }

@@ -24,7 +24,7 @@ import UserNotifications
     func handleMessage(_ request: UNNotificationRequest, _ content: UNMutableNotificationContent, _ message: Message, _ contentHandler: @escaping (UNNotificationContent) -> Void) {
         NtfyLogger.nse.debug("Handling message")
 
-        let baseURL = content.userInfo["base_url"] as? String ?? Bundle.main.appBaseUrl
+        let baseURL = content.userInfo["base_url"] as? String ?? AppConfiguration.appBaseUrl
         let modifiedContent = message.notificationContent(for: baseURL)
         
         guard let topic = try? dependencies.store.topic(serviceURL: baseURL, name: message.topic) else {
@@ -52,7 +52,7 @@ import UserNotifications
     func handlePollRequest(_ request: UNNotificationRequest, _ content: UNMutableNotificationContent, _ pollRequest: Message, _ contentHandler: @escaping (UNNotificationContent) -> Void) async {
         NtfyLogger.nse.debug("Handling poll request")
 
-        let baseURL = content.userInfo["base_url"] as? String ?? Bundle.main.appBaseUrl
+        let baseURL = content.userInfo["base_url"] as? String ?? AppConfiguration.appBaseUrl
 
         guard let pollId = pollRequest.pollId else {
             NtfyLogger.nse.debug("No pollId found in poll request")

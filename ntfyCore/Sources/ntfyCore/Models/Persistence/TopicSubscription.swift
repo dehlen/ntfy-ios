@@ -46,7 +46,7 @@ public class TopicSubscription: Identifiable {
     
     @Transient
     public var subscriptionTopic: String {
-        if serviceURL == Bundle.main.appBaseUrl {
+        if serviceURL == AppConfiguration.appBaseUrl {
             topic
         } else {
             "\(serviceURL)/\(topic)"

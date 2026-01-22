@@ -27,7 +27,7 @@ struct SubscriptionRow: View {
     }
     
     private var title: String {
-        if subscription.serviceURL == Bundle.main.appBaseUrl {
+        if subscription.serviceURL == AppConfiguration.appBaseUrl {
             return subscription.topic
         } else {
             return "\(subscription.serviceURLHost)/\(subscription.topic)"
